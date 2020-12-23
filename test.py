@@ -1,20 +1,47 @@
+from flask import  Flask,render_template,request, current_app, send_from_directory,make_response
+import doc_wenting
+from datetime import timedelta
+import os
 
-from docx import Document
-from docxcompose.composer import Composer
+app=Flask(__name__)
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)
+download_fils_path=os.getcwd()+'/static/download'
+# download_file_list = os.listdir(download_fils_path)
 
-def hebing(files,final_docx):
-    new_document = Document()
-    composer = Composer(new_document)
-    for index, fn in enumerate(files):
-        sub_doc=Document(fn)
-        if index < len(files)-1:
-           sub_doc.add_page_break()
-        composer.append(sub_doc)
-    composer.save(final_docx)
+@app.route('/banzheng')
+def banzheng():
+    return render_template("banzheng.html")
 
-if __name__ == "__main__":
-    dir="/Users/jingmo/PycharmProjects/web2020/static/download"
-    a1=dir+"/"+"2020-12-14 13:29:21赵文婷2.doc"
-    a2=dir+"/"+"2020-12-14 13:29:21赵文婷1.doc"
-    res=dir+"/"+"2020-12-14 13:29:21赵文婷.doc"
-    hebing([a1,a2],res)
+@app.route('/banzhengProcess',methods=['POST','GET'])
+def banzhengProcess():
+    if request.method=='POST':
+        nm=request.form['nm']     #获取姓名文本框的输入值
+        files=doc_wenting.process(nm,download_fils_path)
+        if files=="success":
+            return render_template("success.html")
+        else:
+            return files
+
+
+
+@app.route('/download')
+def index():
+    download_file_list = os.listdir(download_fils_path)
+    download_file_list.sort(reverse=True)
+    res = make_response(render_template("download.html",file_list=download_file_list))
+    res.headers["Cache-Control"] = "no_store"
+    res.headers["max-age"] = 1
+    # return render_template("download.html",file_list=download_file_list)
+    return res
+
+@app.route("/downloading/<filename>")
+def downloading(filename):
+    res = make_response(send_from_directory(download_fils_path, filename))
+    res.headers["Cache-Control"] = "no_store"
+    res.headers["max-age"] = 1
+    return res
+    # return send_from_directory(download_fils_path, filename)
+
+
+if __name__=="__main__":
+    app.run(port=2020,host="0.0.0.0",debug=False)
