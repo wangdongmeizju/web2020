@@ -1,6 +1,7 @@
 from docx import Document
-import time
+import time,datetime,pytz
 from docxcompose.composer import Composer
+
 
 
 def get_para_data(output_doc_name, paragraph):
@@ -39,8 +40,8 @@ def hebing(files,final_docx):
     composer.save(final_docx)
 
 def process(txt,download_file_list,tijiaoren):
-    time_wang=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    file_name=download_file_list+"/"+tijiaoren+"banzheng.doc"
+    time_wang=datetime.datetime.fromtimestamp(int(time.time()), pytz.timezone('Asia/Shanghai')).strftime('%Y-%m-%d %H:%M:%S')
+    file_name=download_file_list+"/"+tijiaoren+time_wang+"banzheng.doc"
     infos=txt.split("@@@")
     kk=1
     output_docs=[]

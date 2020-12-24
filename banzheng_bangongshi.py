@@ -5,7 +5,7 @@ import os
 
 app=Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)
-download_fils_path=os.getcwd()+'/static/download'
+banzhengshujuwenjianjia='/banzheng/banzhengshuju'
 # download_file_list = os.listdir(download_fils_path)
 
 @app.route('/banzheng')
@@ -17,7 +17,7 @@ def banzhengProcess():
     if request.method=='POST':
         tijiaoren=request.form['tijiaoren']
         nm=request.form['nm']     #获取姓名文本框的输入值
-        flag,file_wang=doc_wenting.process(nm,download_fils_path,tijiaoren)
+        flag,file_wang=doc_wenting.process(nm,banzhengshujuwenjianjia,tijiaoren)
         if flag=="success":
             name=file_wang.split('/')[-1]
             filePath=file_wang.replace(name,'')
