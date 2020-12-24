@@ -39,6 +39,7 @@ def hebing(files,final_docx):
     composer.save(final_docx)
 
 def process(txt,download_file_list,tijiaoren):
+    time_wang=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     file_name=download_file_list+"/"+tijiaoren+"banzheng.doc"
     infos=txt.split("@@@")
     kk=1
