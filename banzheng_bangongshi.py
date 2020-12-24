@@ -5,7 +5,7 @@ import os
 
 app=Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)
-banzhengshujuwenjianjia='/banzheng/banzhengshuju'
+banzhengshujuwenjianjia='/root/banzheng/banzhengshuju'
 # download_file_list = os.listdir(download_fils_path)
 
 @app.route('/banzheng')
