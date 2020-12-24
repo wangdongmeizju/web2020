@@ -38,19 +38,16 @@ def hebing(files,final_docx):
         composer.append(sub_doc)
     composer.save(final_docx)
 
-def process(txt,download_file_list):
-    time_wang=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    file_name=download_file_list+"/"+time_wang+txt.split("@@@")[0]+".doc"
-    if (len(txt.split("@@@"))<2):
-        return "办证失败  用@@@分开你的名字了吗"
-    infos=txt.split("@@@")[1].split("_@_")
+def process(txt,download_file_list,tijiaoren):
+    file_name=download_file_list+"/"+tijiaoren+"banzheng.doc"
+    infos=txt.split("@@@")
     kk=1
     output_docs=[]
     for info in infos:
         output_doc = Document()
         temp= info.split("；")
         if (len(temp)<4):
-            return "办证失败    ；应该是中文下的 校区,日期,车牌,人名是不是四个中缺了呀 查查看呀"
+            return "1 校区,日期,车牌,人名是不是四个中缺了呀 查查看呀    2 ；是中文下的 ",""
         xiaoqu=temp[0]
         riqi=temp[1]
         chepai=temp[2]
@@ -72,7 +69,7 @@ def process(txt,download_file_list):
             if person != "":
                 temp=person.split("：")
                 if (len(temp)!=2):
-                    return "办证失败    ：是中文下的,每个人都要身份证 人名 身份证全了了吗"
+                    return "1 每个人都要身份证 人名 两样是否全了   2  ：是中文下的,",""
                 p_n=temp[0]
                 p_s=temp[1]
                 content_wen.append(p_n)
@@ -90,4 +87,4 @@ def process(txt,download_file_list):
         kk=kk+1
     hebing(output_docs,file_name)
 
-    return "success"
+    return "success",file_name

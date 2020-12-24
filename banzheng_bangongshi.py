@@ -15,33 +15,19 @@ def banzheng():
 @app.route('/banzhengProcess',methods=['POST','GET'])
 def banzhengProcess():
     if request.method=='POST':
+        tijiaoren=request.form['tijiaoren']
         nm=request.form['nm']     #获取姓名文本框的输入值
-        files=doc_wenting.process(nm,download_fils_path)
-        if files=="success":
-            return render_template("success.html")
+        flag,file_wang=doc_wenting.process(nm,download_fils_path,tijiaoren)
+        if flag=="success":
+            name=file_wang.split('/')[-1]
+            filePath=file_wang.replace(name,'')
+            res = make_response(send_from_directory(filePath,name))
+            res.headers["Cache-Control"] = "no_store"
+            res.headers["max-age"] = 1
+            return res
         else:
-            return files
-
-
-
-@app.route('/download')
-def index():
-    download_file_list = os.listdir(download_fils_path)
-    download_file_list.sort(reverse=True)
-    res = make_response(render_template("download.html",file_list=download_file_list))
-    res.headers["Cache-Control"] = "no_store"
-    res.headers["max-age"] = 1
-    # return render_template("download.html",file_list=download_file_list)
-    return res
-
-@app.route("/downloading/<filename>")
-def downloading(filename):
-    res = make_response(send_from_directory(download_fils_path, filename))
-    res.headers["Cache-Control"] = "no_store"
-    res.headers["max-age"] = 1
-    return res
-    # return send_from_directory(download_fils_path, filename)
+            return render_template("chongxintianxie.html",error=flag)
 
 
 if __name__=="__main__":
-    app.run(port=2020,host="0.0.0.0",debug=False)
+    app.run(port=2020,host="0.0.0.0",debug=True)
